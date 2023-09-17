@@ -45,7 +45,7 @@ export class AuthService {
   }
 
   private async validateUser(dto: CreateUserDto) {
-    const user = await this.usersService.getUserByEmailOrUsername(dto.email);
+    const user = await this.usersService.getUserByEmail(dto.email);
     if (!user) {
       throw new HttpException('login-email', HttpStatus.FORBIDDEN);
     }

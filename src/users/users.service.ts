@@ -27,21 +27,6 @@ export class UsersService {
     return user;
   }
 
-  async getUserByEmailOrUsername(data: string) {
-    const userOne = await this.userRepository.findOne({ where: { email: data } });
-    const userTwo = await this.userRepository.findOne({ where: { username: data } });
-
-    if (!userOne || !userTwo) {
-      return;
-    }
-
-    if (userOne.id !== userTwo.id) {
-      return;
-    }
-
-    return userOne;
-  }
-
   async getUser(id: number) {
     const user = await this.userRepository.findOne({ where: { id } });
     return user;
