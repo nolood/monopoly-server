@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { UsersService } from 'src/users/users.service';
@@ -22,10 +22,10 @@ export class AuthService {
     const candidateUsername = await this.usersService.getUserByUsername(dto.username);
     const candidateEmail = await this.usersService.getUserByEmail(dto.email);
     if (candidateUsername) {
-      throw new HttpException('Пользователь с таким ником уже существует', HttpStatus.FORBIDDEN);
+      throw new HttpException('reg-username', HttpStatus.FORBIDDEN);
     }
     if (candidateEmail) {
-      throw new HttpException('Пользователь с таким email уже существует', HttpStatus.FORBIDDEN);
+      throw new HttpException('reg-email', HttpStatus.FORBIDDEN);
     }
     const hashPassword = await bcrypt.hash(dto.password, 5);
     const user = await this.usersService.createUser({
@@ -47,10 +47,13 @@ export class AuthService {
   private async validateUser(dto: CreateUserDto) {
     const user = await this.usersService.getUserByUsername(dto.username);
     const passwordEqual = await bcrypt.compare(dto.password, user.password);
-    if (user && passwordEqual) {
-      return user;
+    if (!user) {
+      throw new HttpException('login-email', HttpStatus.FORBIDDEN);
     }
-    throw new UnauthorizedException({ message: 'Неверный логин или пароль' });
+    if (!passwordEqual) {
+      throw new HttpException('login-password', HttpStatus.FORBIDDEN);
+    }
+    return user;
   }
 
   decodeToken(token: string): number {
