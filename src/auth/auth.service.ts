@@ -46,10 +46,10 @@ export class AuthService {
 
   private async validateUser(dto: CreateUserDto) {
     const user = await this.usersService.getUserByEmailOrUsername(dto.email);
-    const passwordEqual = await bcrypt.compare(dto.password, user.password);
     if (!user) {
       throw new HttpException('login-email', HttpStatus.FORBIDDEN);
     }
+    const passwordEqual = await bcrypt.compare(dto.password, user.password);
     if (!passwordEqual) {
       throw new HttpException('login-password', HttpStatus.FORBIDDEN);
     }
