@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { UsersService } from 'src/users/users.service';
@@ -24,12 +19,13 @@ export class AuthService {
   }
 
   async registration(dto: CreateUserDto) {
-    const candidate = await this.usersService.getUserByUsername(dto.username);
-    if (candidate) {
-      throw new HttpException(
-        'Пользователь с таким ником уже существует',
-        HttpStatus.BAD_REQUEST,
-      );
+    const candidateUsername = await this.usersService.getUserByUsername(dto.username);
+    const candidateEmail = await this.usersService.getUserByEmail(dto.email);
+    if (candidateUsername) {
+      throw new HttpException('Пользователь с таким ником уже существует', HttpStatus.FORBIDDEN);
+    }
+    if (candidateEmail) {
+      throw new HttpException('Пользователь с таким email уже существует', HttpStatus.FORBIDDEN);
     }
     const hashPassword = await bcrypt.hash(dto.password, 5);
     const user = await this.usersService.createUser({

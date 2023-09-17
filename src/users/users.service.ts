@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { User } from './users.model';
 import { CreateUserDto } from './dto/create-user.dto';
+import { User } from './users.model';
 
 @Injectable()
 export class UsersService {
@@ -19,6 +19,11 @@ export class UsersService {
 
   async getUserByUsername(username: string) {
     const user = await this.userRepository.findOne({ where: { username } });
+    return user;
+  }
+
+  getUserByEmail(email: string) {
+    const user = this.userRepository.findOne({ where: { email } });
     return user;
   }
 
