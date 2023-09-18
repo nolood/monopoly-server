@@ -1,5 +1,6 @@
-import { Column, Table, Model } from 'sequelize-typescript';
+import { Column, Table, Model, ForeignKey } from 'sequelize-typescript';
 import { DataTypes } from 'sequelize';
+import { DefaultGame } from '../default-games/default-games.model';
 
 interface UserCreationAttributes {
   email: string;
@@ -21,4 +22,7 @@ export class User extends Model<User, UserCreationAttributes> {
   username: string;
   @Column({ type: DataTypes.STRING })
   password: string;
+
+  @ForeignKey(() => DefaultGame)
+  defaultGame: DefaultGame;
 }

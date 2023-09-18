@@ -11,12 +11,6 @@ export class UsersService {
     const user = await this.userRepository.create(dto);
     return user;
   }
-
-  async getAllUsers() {
-    const users = await this.userRepository.findAll();
-    return users;
-  }
-
   async getUserByUsername(username: string) {
     const user = await this.userRepository.findOne({ where: { username } });
     return user;
@@ -30,5 +24,10 @@ export class UsersService {
   async getUser(id: number) {
     const user = await this.userRepository.findOne({ where: { id } });
     return user;
+  }
+
+  async getAllUsers() {
+    const users = await this.userRepository.findAll({ include: { all: true } });
+    return users;
   }
 }

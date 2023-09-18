@@ -12,4 +12,9 @@ export class UsersController {
   getSelf(@Req() req: { user: User }) {
     return this.userService.getUser(req.user.id);
   }
+
+  @Get()
+  getAll() {
+    return this.userService.getAllUsers();
+  }
 }

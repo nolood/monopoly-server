@@ -4,6 +4,9 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { User } from './users/users.model';
 import { AuthModule } from './auth/auth.module';
+import { DefaultGamesModule } from './default-games/default-games.module';
+import { DefaultGamesUsers } from './default-games/default-games-users.model';
+import { DefaultGame } from './default-games/default-games.model';
 
 @Module({
   imports: [
@@ -17,11 +20,12 @@ import { AuthModule } from './auth/auth.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [User],
+      models: [User, DefaultGamesUsers, DefaultGame],
       autoLoadModels: true,
     }),
     UsersModule,
     AuthModule,
+    DefaultGamesModule,
   ],
   controllers: [],
   providers: [],
